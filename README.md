@@ -5,7 +5,7 @@ In this work, we propose a few-shot GNN-Transformer architecture, FS-GNNTR to fa
 This two-module network learns deep representations from graph-level embeddings. First, a GNN module encodes the structural information of molecular graphs as a set of node and edge features. Node embeddings are then converted into graph embedding representations. A Transformer encoder exploits the contextual information of these vectorial embeddings to propagate deep representations across attention layers.
 
 
-![ScreenShot](results/gnntr.png?raw=true)
+![ScreenShot](FS-GNNTR/plots/fsgnntr.png?raw=true)
 
 A meta-learning framework was explored to optimize model parameters across tasks and quickly adapt to new molecular properties on few-shot data. 
 
