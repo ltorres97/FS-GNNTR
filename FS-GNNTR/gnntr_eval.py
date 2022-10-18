@@ -130,12 +130,12 @@ class GNNTR_eval(nn.Module):
         if tl == 1:
             if dataset == "tox21":
                 self.tasks = 12
-                self.train_tasks = 0 #change to 0 for transfer-learning experiments
-                self.test_tasks = 12 #change to 12 for transfer-learning experiments
+                self.train_tasks = 0
+                self.test_tasks = 12 
         
             elif dataset == "sider":
                 self.tasks = 27
-                self.train_tasks = 0 #change to 0 for transfer-learning experiments
+                self.train_tasks = 0
                 self.test_tasks = 27
 
         self.data = dataset
