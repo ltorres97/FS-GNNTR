@@ -25,13 +25,6 @@ import pandas as pd
 
 import seaborn 
 
-num_atom_type = 120 #including the extra mask tokens
-num_chirality_tag = 3
-
-num_bond_type = 6 #including aromatic and self-loop edge, and extra masked tokens
-num_bond_direction = 3 
-
-
 def pair(t):
     return t if isinstance(t, tuple) else (t, t)
 
