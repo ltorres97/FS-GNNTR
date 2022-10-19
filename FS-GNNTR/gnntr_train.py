@@ -306,7 +306,7 @@ class GNNTR(nn.Module):
             if self.baseline == 0:
                 self.meta_opt.step()
             
-        return 
+        return []
 
     def meta_test(self):
         roc_scores = []
