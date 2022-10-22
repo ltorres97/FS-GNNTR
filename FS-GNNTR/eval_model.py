@@ -41,21 +41,6 @@ baseline = 0
 device = "cuda:0"
 tl = 0
 
-"""
-For this example, on fsgnnconv_eval.py consider:
-ckp_path_gnn = "checkpoints/checkpoints-FSGNNConv/check-sider-5-gnn.pt"
-ckp_path_cnn = "checkpoints/checkpoints-FSGNNConv/check-sider-5-cnn.pt"
-
-and
-
-Uncomment last line of fsgnnconv_eval.py    
-"""
-
-# GraphSage - assumes that nodes that reside in the same neighborhood should have similar embeddings.
-# GIN - Graph Isomorphism Network
-# GCN - Standard Graph Convolutional Network
-
-
 device = "cuda:0"      
 model_eval = GNNTR_eval(dataset, gnn, support_set, pretrained, baseline, tl)
 model_eval.to(device)
