@@ -51,7 +51,6 @@ and
 Uncomment last line of fsgnnconv_eval.py    
 """
 
-# FS-GNNConv - Two module GNN-CNN architecture
 # GraphSage - assumes that nodes that reside in the same neighborhood should have similar embeddings.
 # GIN - Graph Isomorphism Network
 # GCN - Standard Graph Convolutional Network
