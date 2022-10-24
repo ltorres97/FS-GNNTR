@@ -17,7 +17,6 @@ from tqdm import tqdm
 import numpy as np
 from sklearn.metrics import roc_auc_score
 from torch.nn.utils.convert_parameters import vector_to_parameters, parameters_to_vector
-from vit_pytorch.recorder import Recorder
 
 def optimizer_to(optim, device):
     # move optimizer to device
