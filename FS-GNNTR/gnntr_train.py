@@ -240,7 +240,7 @@ class GNNTR(nn.Module):
                         inner_loss = torch.sum(loss_tr)/pred.size()[0]
                    
                     if self.baseline == 0:
-                        inner_losses += inner_loss.item()
+                        inner_losses += inner_loss
                     
                     del graph_pred, emb
                    
