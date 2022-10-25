@@ -214,15 +214,15 @@ class GNNTR(nn.Module):
         
         for k in range(0, self.k_train):
             graph_params = parameters_to_vector(self.gnn.parameters())
-            query_losses = torch.tensor([0.0]).to(device)
+            query_losses = torch.tensor([0.0])
             for t in range(self.train_tasks):
                 
-                loss_support = torch.tensor([0.0]).to(device)
-                loss_query = torch.tensor([0.0]).to(device)
+                loss_support = torch.tensor([0.0])
+                loss_query = torch.tensor([0.0]).
                 
                 if self.baseline == 0:
-                    inner_losses = torch.tensor([0.0]).to(device)
-                    outer_losses = torch.tensor([0.0]).to(device) 
+                    inner_losses = torch.tensor([0.0])
+                    outer_losses = torch.tensor([0.0])
                     
                 for batch_idx, batch in enumerate(tqdm(support_sets[t], desc="Iteration")):
                     batch = batch.to(device)
@@ -322,10 +322,10 @@ class GNNTR(nn.Module):
                 
             for k in range(0, self.k_test):
                 
-                graph_loss = torch.tensor([0.0]).to(device)
+                graph_loss = torch.tensor([0.0])
                 
                 if self.baseline == 0:
-                    loss_logits = torch.tensor([0.0]).to(device)
+                    loss_logits = torch.tensor([0.0])
                 
                 for batch_idx, batch in enumerate(tqdm(support_set, desc="Iteration")):
                     
