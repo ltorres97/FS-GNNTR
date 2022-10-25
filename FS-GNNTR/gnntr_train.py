@@ -218,7 +218,7 @@ class GNNTR(nn.Module):
             for t in range(self.train_tasks):
                 
                 loss_support = torch.tensor([0.0])
-                loss_query = torch.tensor([0.0]).
+                loss_query = torch.tensor([0.0])
                 
                 if self.baseline == 0:
                     inner_losses = torch.tensor([0.0])
