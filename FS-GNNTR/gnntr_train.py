@@ -252,17 +252,15 @@ class GNNTR(nn.Module):
                     
                     graph_pred, emb = self.gnn(batch.x, batch.edge_index, batch.edge_attr, batch.batch)
                     label = batch.y.view(graph_pred.shape).to(torch.float64)
+                    loss_graph = self.loss(graph_pred.double(), label)
+                    query_loss = torch.sum(loss_graph)/graph_pred.size()[0]
+                    loss_query += query_loss
                     
                     if self.baseline == 0:
                         logit, emb = self.transformer(self.gnn.pool(emb, batch.batch))
                         loss_tr = self.loss_transformer(F.sigmoid(logit).double(), label)
                         outer_loss = torch.sum(loss_tr)/logit.size()[0] 
-                        
-                    
-                    loss_graph = self.loss(graph_pred.double(), label)
-                    query_loss = torch.sum(loss_graph)/graph_pred.size()[0]
-                    loss_query += query_loss
-                    
+                                        
                     del graph_pred, emb
                     
                     if self.baseline == 0:
