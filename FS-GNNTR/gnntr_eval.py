@@ -213,9 +213,9 @@ class GNNTR_eval(nn.Module):
                 self.transformer.eval()
            
             for k in range(0, self.k_test):
-                graph_loss = torch.tensor([0.0])
+                graph_loss = torch.tensor([0.0]).to(device)
                 if self.baseline == 0:   
-                    loss_logits = torch.tensor([0.0])
+                    loss_logits = torch.tensor([0.0]).to(device)
                 
                 for batch_idx, batch in enumerate(tqdm(support_set, desc="Iteration")):
                     batch = batch.to(device)
