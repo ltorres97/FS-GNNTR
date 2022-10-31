@@ -9,7 +9,7 @@ This two-module network learns deep representations from graph-level embeddings.
 
 A meta-learning framework was explored to optimize model parameters across tasks and quickly adapt to new molecular properties on few-shot data. 
 
-Extensive experiments on real multiproperty prediction data demonstrate the predictive power and stable performances of the proposed model when inferring specific target properties adaptively.
+Extensive experiments on real multiproperty prediction data demonstrate the predictive power and stable performances of the proposed model when inferring task-specific molecular properties.
 
 This repository provides the source code and datasets for the proposed work.
 
