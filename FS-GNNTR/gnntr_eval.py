@@ -247,12 +247,10 @@ class GNNTR_eval(nn.Module):
                 batch = batch.to(device)
                 
                 with torch.no_grad(): 
-                    graph_pred, emb = self.gnn(batch.x, batch.edge_index, batch.edge_attr, batch.batch)
+                    logit, emb = self.gnn(batch.x, batch.edge_index, batch.edge_attr, batch.batch)
                 
-                y_label.append(batch.y.view(graph_pred.shape))
-                
-                del graph_pred
-                
+                y_label.append(batch.y.view(logit.shape))
+                                
                 if self.baseline == 0:
                     logit, emb = self.transformer(self.gnn.pool(emb, batch.batch))
                 
