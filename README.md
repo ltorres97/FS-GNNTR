@@ -2,7 +2,7 @@
 
 In this work, we propose a few-shot GNN-Transformer architecture, FS-GNNTR to face the problem of low-data in molecular property prediction. It is demonstrated that this model provides strong boosts to predict molecular properties on few-shot data over simple graph-based methods.
 
-This two-module network learns deep representations from graph-level embeddings. First, a GNN module encodes the structural information of molecular graphs as a set of node and edge features. Node embeddings are then converted into graph embedding representations. A Transformer encoder exploits the contextual information of these vectorial embeddings to propagate deep representations across attention layers.
+This two-module network learns deep representations from graph-level embeddings. First, a GNN module encodes the structural information of molecular graphs as a set of node and edge features. Node representations are then converted into graph embeddings. A Transformer encoder exploits the contextual information of these vectorial embeddings to propagate deep representations across attention layers.
 
 
 ![ScreenShot](FS-GNNTR/plots/gnntr.png?raw=true)
