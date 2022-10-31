@@ -17,7 +17,7 @@ Contact Information: (uc2015241578@student.uc.pt, luistorres@dei.uc.pt), if you 
 
 ## Data Availability and Pre-Processing
 
-The Tox21 and SIDER datasets are downloaded from the repository [Data](http://snap.stanford.edu/gnn-pretrain/data/) (chem_dataset.zip) from Hu et al. (2020). 
+The Tox21 and SIDER datasets are downloaded from the repository [Data](http://snap.stanford.edu/gnn-pretrain/data/) (chem_dataset.zip) from [Hu et al. (2020)](https://arxiv.org/abs/1905.12265). 
 
 Raw data is pre-processed and SMILES strings are converted into molecular graphs using RDKit.Chem. 
 
