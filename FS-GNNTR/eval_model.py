@@ -67,10 +67,11 @@ N = 30
    
 for epoch in range(1, 10000):
     
-    roc_scores, gnn_model, cnn_model, gnn_opt, cnn_opt = model_eval.meta_evaluate() #FS-GNNConv
+    roc_scores, gnn_model, tr_model, gnn_opt, tr_opt = model_eval.meta_evaluate() #FS-GNNConv
    
     #roc_scores, gnn_model, gnn_opt = model.meta_evaluate(grads) #baselines
     if roc_auc_list != []:
+        
         for score in range(len(roc_auc_list)):
 
             if roc_auc_list[score] < roc_scores[score]:
