@@ -67,7 +67,7 @@ N = 30
    
 for epoch in range(1, 10000):
     
-    roc_scores, gnn_model, tr_model, gnn_opt, tr_opt = model_eval.meta_evaluate() #FS-GNNConv
+    roc_scores, gnn_model, tr_model, gnn_opt, tr_opt = model_eval.meta_evaluate() #FS-GNNTR
    
     #roc_scores, gnn_model, gnn_opt = model.meta_evaluate(grads) #baselines
     if roc_auc_list != []:
