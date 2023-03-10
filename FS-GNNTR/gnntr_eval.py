@@ -1,5 +1,4 @@
 import torch
-import gc
 import torch.nn as nn
 from gnn_tr import GNN_prediction, TR
 import torch.nn.functional as F
@@ -8,9 +7,9 @@ from torch_geometric.data import DataLoader
 import torch.optim as optim
 from tqdm import tqdm
 import numpy as np
-from sklearn.metrics import roc_auc_score
 from torch.nn.utils.convert_parameters import vector_to_parameters, parameters_to_vector
 from sklearn.manifold import TSNE
+from sklearn.metrics import roc_auc_score, f1_score, precision_score, recall_score, confusion_matrix, accuracy_score, balanced_accuracy_score
 #from tsnecuda import TSNE # Use this package if the previous one doesn't work
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -52,18 +51,50 @@ def sample_test(tasks, test_task, data, batch_size, n_support, n_query):
     
     return support_set, query_set
     
-
-def roc_accuracy(roc_scores, y_label, y_pred):
+def metrics(roc_scores, f1_scores, p_scores, sn_scores, sp_scores, acc_scores, bacc_scores, y_label, y_pred):
     
     roc_auc_list = []
+    f1_score_list = []
+    precision_score_list = []
+    sn_score_list = []
+    sp_score_list = []
+    acc_score_list = []
+    bacc_score_list = []
+
     y_label = torch.cat(y_label, dim = 0).cpu().detach().numpy()
     y_pred = torch.cat(y_pred, dim = 0).cpu().detach().numpy()
    
     roc_auc_list.append(roc_auc_score(y_label, y_pred))
     roc_auc = sum(roc_auc_list)/len(roc_auc_list)
-    roc_scores.append(roc_auc)    
-    
-    return roc_scores
+
+    f1_score_list.append(f1_score(y_label, y_pred, average = 'weighted'))
+    f1_scr = sum(f1_score_list)/len(f1_score_list)
+
+    precision_score_list.append(precision_score(y_label, y_pred, average = 'weighted'))
+    p_scr = sum(precision_score_list)/len(precision_score_list)
+
+    sn_score_list.append(recall_score(y_label, y_pred))
+    sn_scr = sum(sn_score_list)/len(sn_score_list)
+
+    tn, fp, fn, tp = confusion_matrix(y_label, y_pred).ravel()
+    sp_score_list.append(tn/(tn+fp))
+    sp_scr = sum(sp_score_list)/len(sp_score_list)
+
+    acc_score_list.append(accuracy_score(y_label, y_pred))
+    acc_scr =  sum(acc_score_list)/len(acc_score_list)
+
+    bacc_score_list.append(balanced_accuracy_score(y_label, y_pred))
+    bacc_scr =  sum(bacc_score_list)/len(bacc_score_list)
+
+    roc_scores.append(roc_auc)
+    f1_scores.append(f1_scr)
+    p_scores.append(p_scr)
+    sn_scores.append(sn_scr)
+    sp_scores.append(sp_scr)
+    acc_scores.append(acc_scr)
+    bacc_scores.append(bacc_scr)
+
+    return roc_scores, f1_scores, p_scores, sn_scores, sp_scores, acc_scores, bacc_scores
 
 def parse_pred(logit):
     
@@ -136,7 +167,7 @@ class GNNTR_eval(nn.Module):
             elif dataset == "sider":
                 self.tasks = 27
                 self.train_tasks = 0 #change to 0 for transfer-learning experiments
-                self.test_tasks = 27
+                self.test_tasks = 27 #change to 27 for transfer-learning experiments
 
         self.data = dataset
         self.baseline = baseline
@@ -150,11 +181,11 @@ class GNNTR_eval(nn.Module):
         self.k_train = 5
         self.k_test = 10
         self.device = 0
+        self.pos_weight = torch.FloatTensor([1]).to(self.device) #Tox21: 25; SIDER: 1
         self.loss = nn.BCEWithLogitsLoss()
         self.gnn = GNN_prediction(self.graph_layers, self.emb_size, jk = "last", dropout_prob = 0.5, pooling = "mean", gnn_type = gnn)
-        self.transformer = TR(300, (30,1), 1, 128, 5, 5, 256)#3 heads, depth = 3 #256,1,5,64
+        self.transformer = TR(300, (30,1), 1, 128, 5, 5, 256) 
         self.gnn.from_pretrained(pretrained)
-        self.pos_weight = torch.FloatTensor([25]).to(self.device) #Tox21: 25; SIDER: 1
         self.loss_transformer = nn.BCEWithLogitsLoss(pos_weight=self.pos_weight)
         self.meta_optimizer = torch.optim.Adam(self.transformer.parameters(), lr=1e-5)
         print(self.transformer.parameters)
@@ -167,10 +198,10 @@ class GNNTR_eval(nn.Module):
         self.gnn.to(torch.device("cuda:0"))
         
         if (self.baseline == 0):
-            self.ckp_path_gnn = "checkpoints/checkpoints-GT/FS-GNNTR_GNN_tox21_10.pt"
-            self.ckp_path_transformer = "checkpoints/checkpoints-GT/FS-GNNTR_Transformer_tox21_10.pt"
-        elif  (self.baseline == 1):
-            self.ckp_path_gnn = "checkpoints/checkpoints-baselines/GIN/checkpoint_GIN_gnn_tox21_05.pt"
+            self.ckp_path_gnn = "checkpoints/checkpoints-GT/FS-GNNTR_GNN_sider_5.pt"
+            self.ckp_path_transformer = "checkpoints/checkpoints-GT/FS-GNNTR_Transformer_sider_5.pt"
+        elif (self.baseline == 1):
+            self.ckp_path_gnn = "checkpoints/checkpoints-baselines/GIN/checkpoint_GIN_gnn_sider_10.pt"
         
         # Model checkpoints:
         # GCN-Tox21-5-GNN: "checkpoints/checkpoints-baselines/GCN/checkpoint_GCN_gnn_tox21_5.pt"
@@ -189,7 +220,7 @@ class GNNTR_eval(nn.Module):
         # GIN-SIDER-10-GNN: "checkpoints/checkpoints-baselines/GIN/checkpoint_GIN_gnn_sider_10.pt"
         
         self.gnn, self.optimizer, start_epoch = load_ckp(self.ckp_path_gnn, self.gnn, self.optimizer)
-        self.transformer, self.meta_optimizer, start_epoch = load_ckp(self.ckp_path_transformer, self.transformer, self.meta_optimizer)
+        #self.transformer, self.meta_optimizer, start_epoch = load_ckp(self.ckp_path_transformer, self.transformer, self.meta_optimizer)
         
         print(self.optimizer)
         print(self.meta_optimizer)
@@ -202,9 +233,17 @@ class GNNTR_eval(nn.Module):
     def meta_evaluate(self):
         
         roc_scores = []
+        f1_scores = []
+        p_scores = []
+        sn_scores = []
+        sp_scores = []
+        acc_scores = []
+        bacc_scores = []
+
         t=0
         graph_params = parameters_to_vector(self.gnn.parameters())
         device = torch.device("cuda:" + str(self.device)) if torch.cuda.is_available() else torch.device("cpu")
+        
         for test_task in range(self.test_tasks):
             
             support_set, query_set = sample_test(self.tasks, test_task, self.data, self.batch_size, self.n_support, self.n_query)
@@ -247,14 +286,13 @@ class GNNTR_eval(nn.Module):
                 batch = batch.to(device)
                 
                 with torch.no_grad(): 
-                    graph_pred, node_emb = self.gnn(batch.x, batch.edge_index, batch.edge_attr, batch.batch)
+                    logit, node_emb = self.gnn(batch.x, batch.edge_index, batch.edge_attr, batch.batch)
                 
-                y_label.append(batch.y.view(graph_pred.shape))
-                
-                del graph_pred
+                y_label.append(batch.y.view(logit.shape))
                 
                 if self.baseline == 0:
-                    logit, node_emb = self.transformer(self.gnn.pool(node_emb, batch.batch))
+                    with torch.no_grad(): 
+                        logit, node_emb = self.transformer(self.gnn.pool(node_emb, batch.batch))
                 
                 pred = parse_pred(logit)
                 
@@ -269,10 +307,11 @@ class GNNTR_eval(nn.Module):
                 y_pred.append(pred)   
               
             #t = plot_tsne(nodes, labels, t)
-             
-            roc_scores = roc_accuracy(roc_scores, y_label, y_pred)
-               
+                        
+            roc_scores, f1_scores, p_scores, sn_scores, sp_scores, acc_scores, bacc_scores  = metrics(roc_scores, f1_scores, p_scores, sn_scores, sp_scores, acc_scores, bacc_scores, y_label, y_pred)
+            
             vector_to_parameters(graph_params, self.gnn.parameters())
         
-        return roc_scores, self.gnn.state_dict(), self.transformer.state_dict(), self.optimizer.state_dict(), self.meta_optimizer.state_dict()
+        #return roc_scores, self.gnn.state_dict(), self.transformer.state_dict(), self.optimizer.state_dict(), self.meta_optimizer.state_dict()
+        return [roc_scores, f1_scores, p_scores, sn_scores, sp_scores, acc_scores, bacc_scores], self.gnn.state_dict(), self.transformer.state_dict(), self.optimizer.state_dict(), self.meta_optimizer.state_dict() 
         #return [statistics.mean(roc_scores)], self.gnn.state_dict(), self.transformer.state_dict(), self.optimizer.state_dict(), self.meta_optimizer.state_dict()       

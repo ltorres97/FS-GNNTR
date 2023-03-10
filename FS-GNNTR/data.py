@@ -30,7 +30,6 @@ from torch_geometric.data import Data
 from torch_geometric.data import InMemoryDataset
 from torch_geometric.data import Batch
 from itertools import repeat, product, chain
-import torch
 import random
 
 allowable_features = {

@@ -1,15 +1,16 @@
-## Few-shot GNN-Transformer Architecture with Graph Embeddings for Low-data Molecular Property Prediction
+## Few-shot Learning with Transformers via Graph Embeddings for Molecular Property Prediction
 
-In this work, we propose a few-shot GNN-Transformer architecture, FS-GNNTR to face the problem of low-data in molecular property prediction. It is demonstrated that this model provides strong boosts to predict molecular properties on few-shot data over simple graph-based methods.
+In this work, we propose a few-shot GNN-Transformer architecture, FS-GNNTR to face the problem of low-data in molecular property prediction. It is demonstrated that this model provides strong boosts when predicting molecular properties on few-shot data over simple graph-based methods.
 
-This two-module network learns deep representations from graph-level embeddings. First, a GNN module encodes the structural information of molecular graphs as a set of node and edge features. Node embeddings are then converted into graph embedding representations. A Transformer encoder exploits the contextual information of these vectorial embeddings to propagate deep representations across attention layers.
+The GNN-Transformer network learns deep representations from graph-level embeddings. First, a GNN module encodes the structural information of molecular graphs as a set of node and edge features. Node and edge embeddings are then converted into graph embedding representations by neighborhood aggregation. Then, a Transformer encoder exploits the contextual information of these vectorial embeddings to propagate deep representations across attention layers.
 
+![ScreenShot](FS-GNNTR/plots/gnntr.png?raw=true)
 
-![ScreenShot](results/gnntr.png?raw=true)
+A two-module meta-learning framework was explored to optimize model parameters across tasks and quickly adapt to new molecular properties on few-shot data. 
 
-A meta-learning framework was explored to optimize model parameters across tasks and quickly adapt to new molecular properties on few-shot data. 
+![ScreenShot](FS-GNNTR/plots/meta-fsgnntr.png?raw=true)
 
-Extensive experiments on real multiproperty prediction data demonstrate the predictive power and stable performances of the proposed model when inferring specific target properties adaptively.
+Extensive experiments on real multiproperty prediction data demonstrate the predictive power and stable performances of the proposed model when inferring task-specific molecular properties.
 
 This repository provides the source code and datasets for the proposed work.
 
@@ -17,7 +18,7 @@ Contact Information: (uc2015241578@student.uc.pt, luistorres@dei.uc.pt), if you 
 
 ## Data Availability and Pre-Processing
 
-The Tox21 and SIDER datasets are downloaded from [Data](http://snap.stanford.edu/gnn-pretrain/data/) (chem_dataset.zip). 
+The Tox21 and SIDER datasets are downloaded from the repository [Data](http://snap.stanford.edu/gnn-pretrain/data/) (chem_dataset.zip) from [Hu et al. (2020)](https://arxiv.org/abs/1905.12265). 
 
 Raw data is pre-processed and SMILES strings are converted into molecular graphs using RDKit.Chem. 
 
@@ -99,3 +100,4 @@ url={https://openreview.net/forum?id=HJlWWJSFDH},
   howpublished = {\url{https://github.com/lucidrains/vit-pytorch}},
 }
 ```
+

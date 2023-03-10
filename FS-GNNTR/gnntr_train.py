@@ -1,12 +1,4 @@
-from sklearn.manifold import TSNE
-# from tsnecuda import TSNE # Use this package if the previous one doesn't work
-import matplotlib.pyplot as plt
-import pandas as pd
-import seaborn as sns
-import statistics
-
 import torch
-import gc
 import torch.nn as nn
 from gnn_tr import GNN_prediction, TR
 import torch.nn.functional as F
@@ -17,7 +9,12 @@ from tqdm import tqdm
 import numpy as np
 from sklearn.metrics import roc_auc_score
 from torch.nn.utils.convert_parameters import vector_to_parameters, parameters_to_vector
-from vit_pytorch.recorder import Recorder
+from sklearn.manifold import TSNE
+# from tsnecuda import TSNE # Use this package if the previous one doesn't work
+import matplotlib.pyplot as plt
+import pandas as pd
+import seaborn as sns
+import statistics
 
 def optimizer_to(optim, device):
     # move optimizer to device
@@ -180,8 +177,7 @@ class GNNTR(nn.Module):
             self.ckp_path_transformer = "checkpoints/checkpoints-GT/FS-GNNTR_Transformer_tox21_10.pt"
         elif self.baseline == 1:
             self.ckp_path_gnn = "checkpoints/checkpoints-baselines/GCN/checkpoint_gcn_gnn_tox21_5.pt"
-            
-            
+                        
         # Model checkpoints:
         # GCN-Tox21-5-GNN: "checkpoints/checkpoints-baselines/GCN/checkpoint_GCN_gnn_tox21_5.pt"
         # GCN-SIDER-5-GNN: "checkpoints/checkpoints-baselines/GCN/checkpoint_GCN_gnn_sider_5.pt"    

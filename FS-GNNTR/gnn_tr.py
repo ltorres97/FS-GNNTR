@@ -1,29 +1,10 @@
 
 import torch
-from torch import nn, einsum
+from torch import nn
 from torch_geometric.nn import global_mean_pool
 from gnn_models import GNN
-#from torchmeta.modules import (MetaModule, MetaSequential, MetaConv1d,
-                               #MetaBatchNorm1d, MetaLinear)
-from torch_geometric.nn import MessagePassing
 from einops import rearrange
-from torch_geometric import utils
-import torch_geometric.utils as utils
-from torch_scatter import scatter_add, scatter_mean, scatter_max
-import torch_geometric.nn as gnn
-
-from einops import rearrange, repeat
 from einops.layers.torch import Rearrange
-import torch.nn.functional as F
-import math
-from vit_pytorch.vit import Transformer, ViT
-
-from mlxtend.plotting import heatmap
-import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
-
-import seaborn 
 
 num_atom_type = 120 #including the extra mask tokens
 num_chirality_tag = 3
