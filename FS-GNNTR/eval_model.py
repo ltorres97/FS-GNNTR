@@ -28,7 +28,6 @@ support_set = 10
 pretrained = "pre-trained/supervised_contextpred.pth"
 baseline = 1
 device = "cuda:0"
-tl = 0
 
 # FS-GNNTR - Two module GNN-TR architecture
 # GraphSAGE - assumes that nodes that reside in the same neighborhood should have similar embeddings.
@@ -36,41 +35,36 @@ tl = 0
 # GCN - Standard Graph Convolutional Network
 
 device = "cuda:0"      
-model_eval = GNNTR_eval(dataset, gnn, support_set, pretrained, baseline, tl)
+model_eval = GNNTR_eval(dataset, gnn, support_set, pretrained, baseline)
 model_eval.to(device)
 
 print("Dataset:", dataset)
 
 roc_auc_list = []
-    
-if tl == 0:
-    if dataset== "tox21":
+   
+if dataset== "tox21":
 
-        roc = [[],[],[]]
-        f1s = [[],[],[]]
-        prs = [[],[],[]]
-        sns = [[],[],[]]
-        sps = [[],[],[]]
-        acc = [[],[],[]]
-        bacc = [[],[],[]]
-        
-        labels =  ['SR-HSE', 'SR-MMP', 'SR-p53']
-        
-    elif dataset == "sider":
-        
-        roc = [[],[],[],[],[],[]]
-        f1s = [[],[],[],[],[],[]]
-        prs = [[],[],[],[],[],[]]
-        sns = [[],[],[],[],[],[]]
-        sps = [[],[],[],[],[],[]]
-        acc = [[],[],[],[],[],[]]
-        bacc = [[],[],[],[],[],[]]
-        
-        labels =  ['R.U.D.', 'P.P.P.C.', 'E.L.D.', 'C.D.', 'N.S.D.', 'I.P.P.C.']    
+    roc = [[],[],[]]
+    f1s = [[],[],[]]
+    prs = [[],[],[]]
+    sns = [[],[],[]]
+    sps = [[],[],[]]
+    acc = [[],[],[]]
+    bacc = [[],[],[]]
 
-if tl == 1:
-   exp = [[]]
-   labels = ['Mean_Task']
+    labels =  ['SR-HSE', 'SR-MMP', 'SR-p53']
+
+elif dataset == "sider":
+
+    roc = [[],[],[],[],[],[]]
+    f1s = [[],[],[],[],[],[]]
+    prs = [[],[],[],[],[],[]]
+    sns = [[],[],[],[],[],[]]
+    sps = [[],[],[],[],[],[]]
+    acc = [[],[],[],[],[],[]]
+    bacc = [[],[],[],[],[],[]]
+
+    labels =  ['R.U.D.', 'P.P.P.C.', 'E.L.D.', 'C.D.', 'N.S.D.', 'I.P.P.C.']    
       
 N = 30
    
