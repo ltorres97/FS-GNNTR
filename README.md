@@ -1,4 +1,4 @@
-## Few-shot Learning with Transformers via Graph Embeddings for Molecular Property Prediction
+## FS-GNNTR: Few-shot Learning with Transformers via Graph Embeddings for Molecular Property Prediction
 
 In this work, we propose a few-shot GNN-Transformer architecture, FS-GNNTR to face the problem of low-data in molecular property prediction. It is demonstrated that this model provides strong boosts when predicting molecular properties on few-shot data over simple graph-based methods.
 
