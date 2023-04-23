@@ -1,4 +1,3 @@
-
 import torch
 from torch import nn
 from torch_geometric.nn import global_mean_pool
