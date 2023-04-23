@@ -1,14 +1,3 @@
-"""
----------------------------------------------------------------------------------------
-Code Implementation of graph-based baselines - GIN, GCN and GraphSAGE.
-
-This code is based on Strategies for Pre-training Graph Neural Networks of Hu et al.
-Paper: Hu, W., Liu, B., Gomes, J., Zitnik, M., Liang, P., Pande, V., Leskovec, J.:
-Strategies for Pre-training Graph Neural Networks. arXiv (2019). 
-https://arxiv.org/abs/1905.12265
----------------------------------------------------------------------------------------
-"""
-
 import torch
 import torch_geometric.nn as gnn
 from torch_geometric.nn import MessagePassing
