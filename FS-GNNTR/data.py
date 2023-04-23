@@ -1,15 +1,3 @@
-"""
----------------------------------------------------------------------------------------
-Code Implementation to pre-process the data and perform the transformation of SMILES
-strings into molecular graphs using RDKit.Chem.
-Run this script to pre-process data saved in the Data/[DatasetName]/pre-processed
-/[Task]/processed file.
-This code is based on Strategies for Pre-training Graph Neural Networks of Hu et al.
-Paper: Hu, W., Liu, B., Gomes, J., Zitnik, M., Liang, P., Pande, V., Leskovec, J.:
-Strategies for Pre-training Graph Neural Networks. arXiv (2019). 
-https://arxiv.org/abs/1905.12265
----------------------------------------------------------------------------------------
-"""
 
 import os
 import sys
