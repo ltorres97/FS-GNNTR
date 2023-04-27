@@ -112,14 +112,14 @@ def plot_tsne(nodes, labels, t):
     labels_sider = ['R.U.D.', 'P.P.P.C.', 'E.L.D.', 'C.D.', 'N.S.D.', 'I.P.P.C.']
     labels_list =  labels_sider
     t+=1
-    node_emb_tsne = np.asarray(nodes)
+    emb_tsne = np.asarray(nodes)
     y_tsne = np.asarray(labels).flatten()
     slipper_colour = pd.DataFrame({'colour': ['Blue', 'Orange'],
                        'label': [0, 1]})
     
     c_dict = {'Positive': '#ff7f0e','Negative': '#1f77b4' }
 
-    z = TSNE(n_components=2, init='random').fit_transform(node_emb_tsne)
+    z = TSNE(n_components=2, init='random').fit_transform(emb_tsne)
     label_vals = {0: 'Negative', 1: 'Positive'}
     tsne_result_df = pd.DataFrame({'tsne_dim_1': z[:,0], 'tsne_dim_2': z[:,1], 'label': y_tsne})
     tsne_result_df['label'] = tsne_result_df['label'].map(label_vals)
@@ -247,19 +247,19 @@ class GNNTR_eval(nn.Module):
                 
                 for batch_idx, batch in enumerate(tqdm(support_set, desc="Iteration")):
                     batch = batch.to(device)
-                    graph_pred, node_emb = self.gnn(batch.x, batch.edge_index, batch.edge_attr, batch.batch)
+                    graph_pred, emb = self.gnn(batch.x, batch.edge_index, batch.edge_attr, batch.batch)
                     y = batch.y.view(graph_pred.shape).to(torch.float64)
                     loss_graph = self.loss(graph_pred.double(), y)
                     graph_loss += torch.sum(loss_graph)/graph_pred.size()[0]
                     
                     if self.baseline == 0:
                         with torch.no_grad():
-                            val_logit, emb = self.transformer(self.gnn.pool(node_emb, batch.batch))
+                            val_logit, emb = self.transformer(self.gnn.pool(emb, batch.batch))
                         
                         loss_tr = self.loss_transformer(F.sigmoid(val_logit).double(), y)
                         loss_logits += torch.sum(loss_tr)/val_logit.size()[0] 
                               
-                    del graph_pred, node_emb
+                    del graph_pred, emb
                     
                 updated_grad, updated_params = self.update_graph_params(graph_loss, lr_update = self.lr_update)
                 vector_to_parameters(updated_params, self.gnn.parameters())
@@ -275,20 +275,20 @@ class GNNTR_eval(nn.Module):
                 batch = batch.to(device)
                 
                 with torch.no_grad(): 
-                    logit, node_emb = self.gnn(batch.x, batch.edge_index, batch.edge_attr, batch.batch)
+                    logit, emb = self.gnn(batch.x, batch.edge_index, batch.edge_attr, batch.batch)
                 
                 y_label.append(batch.y.view(logit.shape))
                 
                 if self.baseline == 0:
-                    with torch.no_grad(): 
-                        logit, node_emb = self.transformer(self.gnn.pool(node_emb, batch.batch))
+                    with torch.no_grad():
+                        logit, emb = self.transformer(self.gnn.pool(emb, batch.batch))
                 
                 pred = parse_pred(logit)
                 
-                node_emb_tsne = node_emb.cpu().detach().numpy() 
+                emb_tsne = emb.cpu().detach().numpy() 
                 y_tsne = batch.y.view(pred.shape).cpu().detach().numpy()
                
-                for i in node_emb_tsne:
+                for i in emb_tsne:
                     nodes.append(i)
                 for j in y_tsne:
                     labels.append(j)
