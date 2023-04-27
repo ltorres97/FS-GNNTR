@@ -231,7 +231,7 @@ class GNNTR_eval(nn.Module):
 
         t=0
         graph_params = parameters_to_vector(self.gnn.parameters())
-        device = torch.device("cuda:" + str(self.device)) if torch.cuda.is_available() else torch.device("cpu")
+        device = torch.device("cuda:0" if torch.cuda.is_available() else torch.device("cpu"))
         
         for test_task in range(self.test_tasks):
             
