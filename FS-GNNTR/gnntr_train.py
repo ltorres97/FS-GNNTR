@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from gnn_tr import GNN_prediction, TR
+from transformer import GNN_prediction, TR
 import torch.nn.functional as F
 from data import MoleculeDataset, random_sampler
 from torch_geometric.data import DataLoader
