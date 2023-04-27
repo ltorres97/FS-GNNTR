@@ -205,7 +205,7 @@ class GNNTR(nn.Module):
         self.gnn.train()
         if self.baseline == 0:
             self.transformer.train()
-        device = torch.device("cuda:" + str(self.device)) if torch.cuda.is_available() else torch.device("cpu")
+        device = torch.device("cuda:0"))
         
         support_sets, query_sets = sample_train(self.tasks, self.data, self.batch_size, self.n_support, self.n_query)
         
@@ -308,7 +308,7 @@ class GNNTR(nn.Module):
         roc_scores = []
         t=0
         graph_params = parameters_to_vector(self.gnn.parameters())
-        device = torch.device("cuda:" + str(self.device)) if torch.cuda.is_available() else torch.device("cpu")
+        device = torch.device("cuda:0")
         
         for test_task in range(self.test_tasks):
             
