@@ -99,14 +99,14 @@ def plot_tsne(nodes, labels, t):
     #labels_sider = ['R.U.D.', 'P.P.P.C.', 'E.L.D.', 'C.D.', 'N.S.D.', 'I.S.P.C.']
      
     t+=1
-    node_emb_tsne = np.asarray(nodes)
+    emb_tsne = np.asarray(nodes)
     y_tsne = np.asarray(labels).flatten()
     slipper_colour = pd.DataFrame({'colour': ['Blue', 'Orange'],
                        'label': [0, 1]})
     
     c_dict = {'Positive': '#ff7f0e','Negative': '#1f77b4' }
      
-    z = TSNE(n_components=2, init='random').fit_transform(node_emb_tsne)
+    z = TSNE(n_components=2, init='random').fit_transform(emb_tsne)
     label_vals = {0: 'Negative', 1: 'Positive'}
     tsne_result_df = pd.DataFrame({'tsne_dim_1': z[:,0], 'tsne_dim_2': z[:,1], 'label': y_tsne})
     tsne_result_df['label'] = tsne_result_df['label'].map(label_vals)
