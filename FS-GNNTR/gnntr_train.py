@@ -232,9 +232,9 @@ class GNNTR(nn.Module):
                     torch.cuda.empty_cache()    
                     
                     if self.baseline == 0:
-                        pred, emb = self.transformer(self.gnn.pool(emb, batch.batch))
-                        loss_tr = self.loss_transformer(F.sigmoid(pred).double(), label) 
-                        inner_loss = torch.sum(loss_tr)/pred.size()[0]
+                        tr_pred, emb = self.transformer(self.gnn.pool(emb, batch.batch))
+                        loss_tr = self.loss_transformer(F.sigmoid(tr_pred).double(), label) 
+                        inner_loss = torch.sum(loss_tr)/tr_pred.size()[0]
                    
                     if self.baseline == 0:
                         inner_losses += inner_loss.item()
@@ -365,17 +365,17 @@ class GNNTR(nn.Module):
                 
                 print(F.sigmoid(logit))
           
-                pred = parse_pred(logit)
+                p = parse_pred(logit)
                 
                 emb_tsne = emb.cpu().detach().numpy() 
-                y_tsne = batch.y.view(pred.shape).cpu().detach().numpy()
+                y_tsne = batch.y.view(p.shape).cpu().detach().numpy()
                
                 for i in emb_tsne:
                     nodes.append(i)
                 for j in y_tsne:
                     labels.append(j)
                 
-                y_pred.append(pred)   
+                y_pred.append(p)   
                 
             #t = plot_tsne(nodes, labels, t)
              
