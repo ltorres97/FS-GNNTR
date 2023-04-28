@@ -209,7 +209,7 @@ class GNNTR_eval(nn.Module):
         # GIN-SIDER-10-GNN: "checkpoints/checkpoints-baselines/GIN/checkpoint_GIN_gnn_sider_10.pt"
         
         self.gnn, self.optimizer, start_epoch = load_ckp(self.ckp_path_gnn, self.gnn, self.optimizer)
-        #self.transformer, self.meta_optimizer, start_epoch = load_ckp(self.ckp_path_transformer, self.transformer, self.meta_optimizer)
+        self.transformer, self.meta_optimizer, start_epoch = load_ckp(self.ckp_path_transformer, self.transformer, self.meta_optimizer)
         
         print(self.optimizer)
         print(self.meta_optimizer)
