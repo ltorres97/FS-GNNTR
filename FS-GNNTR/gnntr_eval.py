@@ -283,17 +283,17 @@ class GNNTR_eval(nn.Module):
                     with torch.no_grad():
                         logit, emb = self.transformer(self.gnn.pool(emb, batch.batch))
                 
-                pred = parse_pred(logit)
+                p = parse_pred(logit)
                 
                 emb_tsne = emb.cpu().detach().numpy() 
-                y_tsne = batch.y.view(pred.shape).cpu().detach().numpy()
+                y_tsne = batch.y.view(p.shape).cpu().detach().numpy()
                
                 for i in emb_tsne:
                     nodes.append(i)
                 for j in y_tsne:
                     labels.append(j)
                 
-                y_pred.append(pred)   
+                y_pred.append(p)   
               
             #t = plot_tsne(nodes, labels, t)
                         
