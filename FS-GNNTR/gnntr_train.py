@@ -7,7 +7,7 @@ from torch_geometric.data import DataLoader
 import torch.optim as optim
 from tqdm import tqdm
 import numpy as np
-from sklearn.metrics import roc_auc_score
+from sklearn.metrics import roc_auc_score, f1_score, precision_score, recall_score, confusion_matrix, accuracy_score, balanced_accuracy_score
 from torch.nn.utils.convert_parameters import vector_to_parameters, parameters_to_vector
 from sklearn.manifold import TSNE
 # from tsnecuda import TSNE # Use this package if the previous one doesn't work
