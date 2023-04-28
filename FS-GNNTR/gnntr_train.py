@@ -350,7 +350,15 @@ class GNNTR(nn.Module):
         return 
 
     def meta_test(self):
+        
         roc_scores = []
+        f1_scores = []
+        p_scores = []
+        sn_scores = []
+        sp_scores = []
+        acc_scores = []
+        bacc_scores = []
+        
         t=0
         graph_params = parameters_to_vector(self.gnn.parameters())
         device = torch.device("cuda:0" if torch.cuda.is_available() else torch.device("cpu"))
@@ -421,14 +429,16 @@ class GNNTR(nn.Module):
                     labels.append(j)
                 
                 y_pred.append(p)   
+            
+            vector_to_parameters(graph_params, self.gnn.parameters())
                 
             #t = plot_tsne(nodes, labels, t)
              
-            roc_scores = roc_accuracy(roc_scores, y_label, y_pred)
+            #roc_scores = roc_accuracy(roc_scores, y_label, y_pred)
             
-            
+            roc_scores, f1_scores, p_scores, sn_scores, sp_scores, acc_scores, bacc_scores  = metrics(roc_scores, f1_scores, p_scores, sn_scores, sp_scores, acc_scores, bacc_scores, y_label, y_pred)
                
-            vector_to_parameters(graph_params, self.gnn.parameters())
+           
         
         return roc_scores, self.gnn.state_dict(), self.transformer.state_dict(), self.opt.state_dict(), self.meta_opt.state_dict()
                 
