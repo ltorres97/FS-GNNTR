@@ -82,6 +82,51 @@ def roc_accuracy(roc_scores, y_label, y_pred):
     
     return roc_scores
 
+def metrics(roc_scores, f1_scores, p_scores, sn_scores, sp_scores, acc_scores, bacc_scores, y_label, y_pred):
+    
+    roc_auc_list = []
+    f1_score_list = []
+    precision_score_list = []
+    sn_score_list = []
+    sp_score_list = []
+    acc_score_list = []
+    bacc_score_list = []
+
+    y_label = torch.cat(y_label, dim = 0).cpu().detach().numpy()
+    y_pred = torch.cat(y_pred, dim = 0).cpu().detach().numpy()
+   
+    roc_auc_list.append(roc_auc_score(y_label, y_pred))
+    roc_auc = sum(roc_auc_list)/len(roc_auc_list)
+
+    f1_score_list.append(f1_score(y_label, y_pred, average = 'weighted'))
+    f1_scr = sum(f1_score_list)/len(f1_score_list)
+
+    precision_score_list.append(precision_score(y_label, y_pred, average = 'weighted'))
+    p_scr = sum(precision_score_list)/len(precision_score_list)
+
+    sn_score_list.append(recall_score(y_label, y_pred))
+    sn_scr = sum(sn_score_list)/len(sn_score_list)
+
+    tn, fp, fn, tp = confusion_matrix(y_label, y_pred).ravel()
+    sp_score_list.append(tn/(tn+fp))
+    sp_scr = sum(sp_score_list)/len(sp_score_list)
+
+    acc_score_list.append(accuracy_score(y_label, y_pred))
+    acc_scr =  sum(acc_score_list)/len(acc_score_list)
+
+    bacc_score_list.append(balanced_accuracy_score(y_label, y_pred))
+    bacc_scr =  sum(bacc_score_list)/len(bacc_score_list)
+
+    roc_scores.append(roc_auc)
+    f1_scores.append(f1_scr)
+    p_scores.append(p_scr)
+    sn_scores.append(sn_scr)
+    sp_scores.append(sp_scr)
+    acc_scores.append(acc_scr)
+    bacc_scores.append(bacc_scr)
+
+    return roc_scores, f1_scores, p_scores, sn_scores, sp_scores, acc_scores, bacc_scores
+
 def parse_pred(logit):
     
     pred = F.sigmoid(logit)
@@ -380,6 +425,8 @@ class GNNTR(nn.Module):
             #t = plot_tsne(nodes, labels, t)
              
             roc_scores = roc_accuracy(roc_scores, y_label, y_pred)
+            
+            
                
             vector_to_parameters(graph_params, self.gnn.parameters())
         
