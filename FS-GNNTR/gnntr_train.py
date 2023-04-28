@@ -150,12 +150,12 @@ class GNNTR(nn.Module):
         self.graph_layers = 5
         self.n_support = support_set
         self.learning_rate = 0.001
-        self.n_query = 128
+        self.n_query = 256
         self.emb_size = 300
         self.batch_size = 10
-        self.lr_update = 0.4
-        self.k_train = 5
-        self.k_test = 10
+        self.lr_update = 0.5
+        self.k_train = 10
+        self.k_test = 20
         self.device = 0
         self.loss = nn.BCEWithLogitsLoss()
         self.gnn = GNN_prediction(self.graph_layers, self.emb_size, jk = "last", dropout_prob = 0.5, pooling = "mean", gnn_type = gnn)
