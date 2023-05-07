@@ -36,7 +36,6 @@ device = "cuda:0"
 
 device = "cuda:0"      
 model_eval = GNNTR_eval(dataset, gnn, support_set, pretrained, baseline)
-model_eval.to(device)
 
 print("Dataset:", dataset)
 
