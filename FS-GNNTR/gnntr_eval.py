@@ -144,7 +144,7 @@ def plot_tsne(nodes, labels, t):
     
     return t
 
-class GNNTR_eval(nn.Module):
+class GNNTR_eval():
     def __init__(self, dataset, gnn, support_set, pretrained, baseline):
         super(GNNTR_eval,self).__init__()
                 
