@@ -10,7 +10,7 @@ A two-module meta-learning framework was explored to optimize model parameters a
 
 ![ScreenShot](FS-GNNTR/plots/meta-fsgnntr.png?raw=true)
 
-Extensive experiments on real multiproperty prediction data demonstrate the predictive power and stable performances of the proposed model when inferring task-specific molecular properties.
+Extensive experiments on real multiproperty prediction data, Tox21 and SIDER, demonstrate the predictive power and stable performances of the proposed model when inferring task-specific molecular properties.
 
 This repository provides the source code and datasets for the proposed work.
 
