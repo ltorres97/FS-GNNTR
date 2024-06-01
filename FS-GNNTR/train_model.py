@@ -1,9 +1,10 @@
 import torch
 from gnntr_train import GNNTR
 
-def save_ckp(state, checkpoint_dir, filename):
-    f_path = checkpoint_dir + filename
-    torch.save(state, f_path)
+def save_ckp(state, is_best, checkpoint_dir, filename):
+    if is_best == True:
+        f_path = checkpoint_dir + filename
+        torch.save(state, f_path)
 
 dataset = "tox21"
 gnn= "gin" #gin, graphsage, gcn
@@ -21,7 +22,9 @@ elif dataset == "sider":
     labels =  ['R.U.D.', 'P.P.P.C.', 'E.L.D.', 'C.D.', 'N.S.D.', 'I.P.P.C.']
 
     
-for epoch in range(1, 10000):
+for epoch in range(1, 2001):
+
+    is_best = False
     
     model.meta_train()
     
@@ -57,10 +60,10 @@ for epoch in range(1, 10000):
     file.close()
     
     if baseline == 0:
-        save_ckp(checkpoint_gnn, checkpoint_dir, "/FS-GNNTR_GNN_tox21_10_2.pt")
-        save_ckp(checkpoint_transformer, checkpoint_dir, "/FS-GNNTR_Transformer_tox21_10_2.pt")
+        save_ckp(checkpoint_gnn, is_best, checkpoint_dir, "/FS-GNNTR_GNN_tox21_10_2.pt")
+        save_ckp(checkpoint_transformer, is_best, checkpoint_dir, "/FS-GNNTR_Transformer_tox21_10_2.pt")
 
     elif baseline == 1:
-        save_ckp(checkpoint_gnn, checkpoint_dir, "/GT_GNN_sider_5.pt")
+        save_ckp(checkpoint_gnn, is_best, checkpoint_dir, "/GT_GNN_sider_5.pt")
         
    
