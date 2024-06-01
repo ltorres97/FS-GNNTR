@@ -67,7 +67,7 @@ elif dataset == "sider":
       
 N = 30
    
-for epoch in range(1, 10000):
+for epoch in range(1, 31):
     
     [roc_scores, f1_scores, p_scores, sn_scores, sp_scores, acc_scores, bacc_scores], gnn_model, transformer_model, gnn_opt, t_opt = model_eval.meta_evaluate() #FS-GNNTR
         
