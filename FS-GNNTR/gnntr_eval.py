@@ -174,7 +174,7 @@ class GNNTR_eval():
         self.transformer = TR(300, (30,1), 1, 128, 5, 5, 256) 
         self.gnn.from_pretrained(pretrained)
         if self.baseline == 0:
-            self.pos_weight = torch.FloatTensor([25]).to(self.device) #Tox21: 35; SIDER: 1
+            self.pos_weight = torch.FloatTensor([1]).to(self.device) #Tox21: 35; SIDER: 1
             self.loss = nn.BCEWithLogitsLoss(pos_weight=self.pos_weight)
             self.loss_transformer = nn.BCEWithLogitsLoss(pos_weight=self.pos_weight)
         if self.baseline == 1:
