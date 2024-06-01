@@ -170,14 +170,16 @@ class GNNTR_eval():
         self.k_train = 10
         self.k_test = 20
         self.device = 0
-        self.pos_weight = torch.FloatTensor([1]).to(self.device) #Tox21: 25; SIDER: 1
-        self.loss = nn.BCEWithLogitsLoss()
         self.gnn = GNN_prediction(self.graph_layers, self.emb_size, jk = "last", dropout_prob = 0.5, pooling = "mean", gnn_type = gnn)
         self.transformer = TR(300, (30,1), 1, 128, 5, 5, 256) 
         self.gnn.from_pretrained(pretrained)
-        self.loss_transformer = nn.BCEWithLogitsLoss(pos_weight=self.pos_weight)
-        self.meta_optimizer = torch.optim.Adam(self.transformer.parameters(), lr=1e-5)
-        print(self.transformer.parameters)
+        if self.baseline == 0:
+            self.pos_weight = torch.FloatTensor([25]).to(self.device) #Tox21: 35; SIDER: 1
+            self.loss = nn.BCEWithLogitsLoss(pos_weight=self.pos_weight)
+            self.loss_transformer = nn.BCEWithLogitsLoss(pos_weight=self.pos_weight)
+        if self.baseline == 1:
+            self.loss = nn.BCEWithLogitsLoss()
+        self.meta_opt = torch.optim.Adam(self.transformer.parameters(), lr=1e-5)
         
         graph_params = []
         graph_params.append({"params": self.gnn.gnn.parameters()})
@@ -185,6 +187,7 @@ class GNNTR_eval():
         
         self.optimizer = optim.Adam(graph_params, lr=self.learning_rate, weight_decay=0) 
         self.gnn.to(torch.device("cuda:0"))
+        self.transformer.to(torch.device("cuda:0"))
         
         if (self.baseline == 0):
             self.ckp_path_gnn = "checkpoints/checkpoints-GT/FS-GNNTR_GNN_sider_5.pt"
@@ -216,12 +219,23 @@ class GNNTR_eval():
         print(self.gnn.parameters())
         
     def update_graph_params(self, loss, lr_update):
-        grads = torch.autograd.grad(loss, self.gnn.parameters())
-        return parameters_to_vector(grads), parameters_to_vector(self.gnn.parameters()) - parameters_to_vector(grads) * lr_update
+        
+        grads = torch.autograd.grad(loss, self.gnn.parameters(), retain_graph=True, allow_unused=True)
+        used_grads = [grad for grad in grads if grad is not None]
+        
+        return parameters_to_vector(used_grads), parameters_to_vector(self.gnn.parameters()) - parameters_to_vector(used_grads) * lr_update
+    
+    def update_tr_params(self, loss, lr_update):
+       
+        grads_tr = torch.autograd.grad(loss, self.transformer.parameters())
+        used_grads_tr = [grad for grad in grads_tr if grad is not None]
+        
+        return parameters_to_vector(used_grads_tr), parameters_to_vector(self.transformer.parameters()) - parameters_to_vector(used_grads_tr) * lr_update
+
 
     def meta_evaluate(self):
         
-          roc_scores = []
+        roc_scores = []
         f1_scores = []
         p_scores = []
         sn_scores = []
@@ -310,6 +324,6 @@ class GNNTR_eval():
             #roc_scores = roc_accuracy(roc_scores, y_label, y_pred)
             
             roc_scores, f1_scores, p_scores, sn_scores, sp_scores, acc_scores, bacc_scores  = metrics(roc_scores, f1_scores, p_scores, sn_scores, sp_scores, acc_scores, bacc_scores, y_label, y_pred)
-                       
+                           
         #return roc_scores, self.gnn.state_dict(), self.transformer.state_dict(), self.optimizer.state_dict(), self.meta_optimizer.state_dict()
         return [roc_scores, f1_scores, p_scores, sn_scores, sp_scores, acc_scores, bacc_scores], self.gnn.state_dict(), self.transformer.state_dict(), self.optimizer.state_dict(), self.meta_optimizer.state_dict() 
