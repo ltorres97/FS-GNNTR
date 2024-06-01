@@ -221,31 +221,37 @@ class GNNTR_eval():
 
     def meta_evaluate(self):
         
-        roc_scores = []
+          roc_scores = []
         f1_scores = []
         p_scores = []
         sn_scores = []
         sp_scores = []
         acc_scores = []
         bacc_scores = []
-
+        
         t=0
         graph_params = parameters_to_vector(self.gnn.parameters())
+        if self.baseline == 0:
+            tr_params = parameters_to_vector(self.transformer.parameters())
+            
         device = torch.device("cuda:0" if torch.cuda.is_available() else torch.device("cpu"))
         
         for test_task in range(self.test_tasks):
             
             support_set, query_set = sample_test(self.tasks, test_task, self.data, self.batch_size, self.n_support, self.n_query)
             self.gnn.eval()
-            if self.baseline == 0:    
+            if self.baseline == 0:
                 self.transformer.eval()
-           
+                
             for k in range(0, self.k_test):
+                
                 graph_loss = torch.tensor([0.0]).to(device)
-                if self.baseline == 0:   
+                
+                if self.baseline == 0:
                     loss_logits = torch.tensor([0.0]).to(device)
                 
                 for batch_idx, batch in enumerate(tqdm(support_set, desc="Iteration")):
+                    
                     batch = batch.to(device)
                     graph_pred, emb = self.gnn(batch.x, batch.edge_index, batch.edge_attr, batch.batch)
                     y = batch.y.view(graph_pred.shape).to(torch.float64)
@@ -253,19 +259,18 @@ class GNNTR_eval():
                     graph_loss += torch.sum(loss_graph)/graph_pred.size()[0]
                     
                     if self.baseline == 0:
-                        with torch.no_grad():
-                            val_logit, emb = self.transformer(self.gnn.pool(emb, batch.batch))
                         
+                        val_logit, emb = self.transformer(self.gnn.pool(emb, batch.batch))
                         loss_tr = self.loss_transformer(F.sigmoid(val_logit).double(), y)
                         loss_logits += torch.sum(loss_tr)/val_logit.size()[0] 
-                              
-                    del graph_pred, emb
-                    
+      
                 updated_grad, updated_params = self.update_graph_params(graph_loss, lr_update = self.lr_update)
                 vector_to_parameters(updated_params, self.gnn.parameters())
-            
-            torch.cuda.empty_cache()
-            
+
+                if self.baseline == 0:
+                    updated_grad_tr, updated_tr_params = self.update_tr_params(loss_logits, lr_update = self.lr_update)
+                    vector_to_parameters(updated_tr_params, self.transformer.parameters())
+
             nodes=[]
             labels=[]
             y_label = []
@@ -276,13 +281,14 @@ class GNNTR_eval():
                 
                 with torch.no_grad(): 
                     logit, emb = self.gnn(batch.x, batch.edge_index, batch.edge_attr, batch.batch)
-                
+    
                 y_label.append(batch.y.view(logit.shape))
-                
+            
                 if self.baseline == 0:
-                    with torch.no_grad():
-                        logit, emb = self.transformer(self.gnn.pool(emb, batch.batch))
+                    logit, emb = self.transformer(self.gnn.pool(emb, batch.batch))
                 
+                print(F.sigmoid(logit))
+          
                 p = parse_pred(logit)
                 
                 emb_tsne = emb.cpu().detach().numpy() 
@@ -294,12 +300,16 @@ class GNNTR_eval():
                     labels.append(j)
                 
                 y_pred.append(p)   
-              
-            #t = plot_tsne(nodes, labels, t)
-                        
-            roc_scores, f1_scores, p_scores, sn_scores, sp_scores, acc_scores, bacc_scores  = metrics(roc_scores, f1_scores, p_scores, sn_scores, sp_scores, acc_scores, bacc_scores, y_label, y_pred)
             
             vector_to_parameters(graph_params, self.gnn.parameters())
-        
+            if self.baseline == 0:
+                vector_to_parameters(tr_params, self.transformer.parameters())
+                
+            #t = plot_tsne(nodes, labels, t)
+             
+            #roc_scores = roc_accuracy(roc_scores, y_label, y_pred)
+            
+            roc_scores, f1_scores, p_scores, sn_scores, sp_scores, acc_scores, bacc_scores  = metrics(roc_scores, f1_scores, p_scores, sn_scores, sp_scores, acc_scores, bacc_scores, y_label, y_pred)
+                       
         #return roc_scores, self.gnn.state_dict(), self.transformer.state_dict(), self.optimizer.state_dict(), self.meta_optimizer.state_dict()
         return [roc_scores, f1_scores, p_scores, sn_scores, sp_scores, acc_scores, bacc_scores], self.gnn.state_dict(), self.transformer.state_dict(), self.optimizer.state_dict(), self.meta_optimizer.state_dict() 
