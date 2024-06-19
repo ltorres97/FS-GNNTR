@@ -179,13 +179,13 @@ class GNNTR_eval():
             self.loss_transformer = nn.BCEWithLogitsLoss(pos_weight=self.pos_weight)
         if self.baseline == 1:
             self.loss = nn.BCEWithLogitsLoss()
-        self.meta_optimizer = torch.optim.Adam(self.transformer.parameters(), lr=1e-5)
+        self.meta_opt = torch.optim.Adam(self.transformer.parameters(), lr=1e-5)
         
         graph_params = []
         graph_params.append({"params": self.gnn.gnn.parameters()})
         graph_params.append({"params": self.gnn.graph_pred_linear.parameters(), "lr":self.learning_rate})
         
-        self.optimizer = optim.Adam(graph_params, lr=self.learning_rate, weight_decay=0) 
+        self.opt = optim.Adam(graph_params, lr=self.learning_rate, weight_decay=0) 
         self.gnn.to(torch.device("cuda:0"))
         self.transformer.to(torch.device("cuda:0"))
         
@@ -211,11 +211,11 @@ class GNNTR_eval():
         # GIN-Tox21-10-GNN: "checkpoints/checkpoints-baselines/GIN/checkpoint_GIN_gnn_tox21_10.pt"
         # GIN-SIDER-10-GNN: "checkpoints/checkpoints-baselines/GIN/checkpoint_GIN_gnn_sider_10.pt"
         
-        self.gnn, self.optimizer, start_epoch = load_ckp(self.ckp_path_gnn, self.gnn, self.optimizer)
-        self.transformer, self.meta_optimizer, start_epoch = load_ckp(self.ckp_path_transformer, self.transformer, self.meta_optimizer)
+        self.gnn, self.opt, start_epoch = load_ckp(self.ckp_path_gnn, self.gnn, self.opt)
+        self.transformer, self.meta_opt, start_epoch = load_ckp(self.ckp_path_transformer, self.transformer, self.meta_opt)
         
-        print(self.optimizer)
-        print(self.meta_optimizer)
+        print(self.opt)
+        print(self.meta_opt)
         print(self.gnn.parameters())
         
     def update_graph_params(self, loss, lr_update):
@@ -325,5 +325,5 @@ class GNNTR_eval():
             
             roc_scores, f1_scores, p_scores, sn_scores, sp_scores, acc_scores, bacc_scores  = metrics(roc_scores, f1_scores, p_scores, sn_scores, sp_scores, acc_scores, bacc_scores, y_label, y_pred)
                            
-        #return roc_scores, self.gnn.state_dict(), self.transformer.state_dict(), self.optimizer.state_dict(), self.meta_optimizer.state_dict()
-        return [roc_scores, f1_scores, p_scores, sn_scores, sp_scores, acc_scores, bacc_scores], self.gnn.state_dict(), self.transformer.state_dict(), self.optimizer.state_dict(), self.meta_optimizer.state_dict() 
+        #return roc_scores, self.gnn.state_dict(), self.transformer.state_dict(), self.opt.state_dict(), self.meta_opt.state_dict()
+        return [roc_scores, f1_scores, p_scores, sn_scores, sp_scores, acc_scores, bacc_scores], self.gnn.state_dict(), self.transformer.state_dict(), self.opt.state_dict(), self.meta_opt.state_dict() 
