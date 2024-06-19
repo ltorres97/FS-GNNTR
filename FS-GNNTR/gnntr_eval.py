@@ -179,7 +179,7 @@ class GNNTR_eval():
             self.loss_transformer = nn.BCEWithLogitsLoss(pos_weight=self.pos_weight)
         if self.baseline == 1:
             self.loss = nn.BCEWithLogitsLoss()
-        self.meta_opt = torch.optim.Adam(self.transformer.parameters(), lr=1e-5)
+        self.meta_optimizer = torch.optim.Adam(self.transformer.parameters(), lr=1e-5)
         
         graph_params = []
         graph_params.append({"params": self.gnn.gnn.parameters()})
