@@ -26,7 +26,7 @@ Raw data is pre-processed and SMILES strings are converted into molecular graphs
 
 The implementation is based on [Strategies for Pre-training Graph Neural Networks (Hu et al.) (2020)](https://arxiv.org/abs/1905.12265).
 
-## Package Installation
+## Python Packages 
 
 We used the following Python packages for core development. We tested on Python 3.7.
 
