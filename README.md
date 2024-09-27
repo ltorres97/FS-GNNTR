@@ -80,7 +80,18 @@ url={https://openreview.net/forum?id=HJlWWJSFDH},
 
 ```
 
-[3] Dosovitskiy, A., Beyer, L., Kolesnikov, A., Weissenborn, D., Zhai, X., Unterthiner, T., Dehghani, M., Minderer, M., Heigold, G., Gelly, S., Uszkoreit, J., Houlsby, N. (2020). An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale. https://doi.org/10.48550/arxiv.2010.11929
+[3] Guo, Z., Zhang, C., Yu, W., Herr, J., Wiest, O., Jiang, M., & Chawla, N. V. (2021). Few-shot graph learning for molecular property prediction. In The Web Conference 2021 - Proceedings of the World Wide Web Conference, WWW 2021 (pp. 2559–2567). Association for Computing Machinery, Inc. https://doi.org/10.1145/3442381.3450112
+```
+@article{guo2021few,
+  title={Few-Shot Graph Learning for Molecular Property Prediction},
+  author={Guo, Zhichun and Zhang, Chuxu and Yu, Wenhao and Herr, John and Wiest, Olaf and Jiang, Meng and Chawla, Nitesh V},
+  journal={arXiv preprint arXiv:2102.07916},
+  year={2021}
+}
+
+```
+
+[4] Dosovitskiy, A., Beyer, L., Kolesnikov, A., Weissenborn, D., Zhai, X., Unterthiner, T., Dehghani, M., Minderer, M., Heigold, G., Gelly, S., Uszkoreit, J., Houlsby, N. (2020). An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale. https://doi.org/10.48550/arxiv.2010.11929
 ```
 @article{Dosovitskiy2020,
    author = {Alexey Dosovitskiy and Lucas Beyer and Alexander Kolesnikov and Dirk Weissenborn and Xiaohua Zhai and Thomas Unterthiner and Mostafa Dehghani and Matthias Minderer and Georg Heigold and Sylvain Gelly and Jakob Uszkoreit and Neil Houlsby},
@@ -91,7 +102,8 @@ url={https://openreview.net/forum?id=HJlWWJSFDH},
    year = {2020},
 }
 ```
-[4] Vision Transformers with PyTorch. https://github.com/lucidrains/vit-pytorch
+
+[5] Vision Transformers with PyTorch. https://github.com/lucidrains/vit-pytorch
 ```
 @misc{Phil Wang,
   author = {Phil Wang},
