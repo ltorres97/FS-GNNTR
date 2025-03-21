@@ -18,6 +18,8 @@ Article Link: https://doi.org/10.1016/j.eswa.2023.120005
 
 Contact Information: (uc2015241578@student.uc.pt, luistorres@dei.uc.pt), if you have any questions about this work.
 
+#### Note: The listed value N = 100 (number of patches) in the Table 6 is a placeholder and not used in the implementation. With an input dimension of 300 and patch size of 30, the actual number of patches is 10.
+
 ## Data Availability and Pre-Processing
 
 The Tox21 and SIDER datasets are downloaded from the repository [Data](http://snap.stanford.edu/gnn-pretrain/data/) (chem_dataset.zip) from [Hu et al. (2020)](https://arxiv.org/abs/1905.12265). 
